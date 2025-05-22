@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grr-webhook
+  namespace: default
+  labels:
+    app: grr-webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grr-webhook
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: grr-webhook
+    spec:
+      containers:
+      - name: grr-webhookl
+        image: ghcr.io/daschwanden/grr-webhook:latest
+        imagePullPolicy: Always
+        env:
+        - name: OPENRELIK_API_SERVER_URL
+          value: "http://my-release-openrelik-api:8710"
+        #- name: OPENRELIK_API_KEY
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: openrelik-api-key
+        #      key: api-key
+      restartPolicy: Always
