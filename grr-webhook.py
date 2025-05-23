@@ -44,7 +44,7 @@ class S(BaseHTTPRequestHandler):
         is_json_request = 'application/json' in content_type.lower()
 
         if not is_json_request:
-            print("Warning: Received POST request without 'application/json' Content-Type.")
+            logging.info("Warning: Received POST request without 'application/json' Content-Type.")
             # You might choose to reject non-JSON requests here if strictly required
             # For this example, we'll still try to process it as JSON in process_post_data
 
@@ -99,16 +99,16 @@ class S(BaseHTTPRequestHandler):
         try:
             # 1. Decode the bytes to a string (UTF-8 is common for JSON)
             data_string = data_bytes.decode('utf-8')
-            print(f"Received raw string data: {data_string}")
+            #print(f"Received raw string data: {data_string}")
         except UnicodeDecodeError:
             error_msg = "Error: Could not decode POST data from bytes (expected UTF-8)."
-            print(error_msg)
+            logging.error(error_msg)
             return None, error_msg
 
         try:
             # 2. Parse the string into a Python dictionary (or list if it's a JSON array)
             parsed_json = json.loads(data_string)
-            print(f"Successfully parsed JSON: {parsed_json}")
+            #print(f"Successfully parsed JSON: {parsed_json}")
             
             # You can now work with parsed_json as a Python dict/list
             # Example: Accessing a value if it's a dictionary
@@ -118,12 +118,12 @@ class S(BaseHTTPRequestHandler):
             return parsed_json, "JSON data processed successfully."
         except json.JSONDecodeError as e:
             error_msg = f"Error: Invalid JSON format in POST data. Details: {e}"
-            print(error_msg)
+            logging.error(error_msg)
             return None, error_msg
         except Exception as e:
             # Catch any other unexpected errors during processing
             error_msg = f"An unexpected error occurred during JSON processing: {e}"
-            print(error_msg)
+            logging.error(error_msg)
             return None, error_msg
 
 def run(server_class=HTTPServer, handler_class=S, port=8080):
