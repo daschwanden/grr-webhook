@@ -59,7 +59,7 @@ class S(BaseHTTPRequestHandler):
                 "message": status_message
             })
             logging.info(response_payload)
-            self.process_payload(response_payload)
+            #self.process_payload(response_payload)
         else:
             # Handle cases where parsing failed
             if "Invalid JSON" in status_message:
